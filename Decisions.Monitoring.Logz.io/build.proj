@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="build_all">
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<RootNamespaces>Decisions.Monitoring.InfluxData</RootNamespaces>
+		<AssemblyName>Decisions.Monitoring.InfluxData.Framework</AssemblyName>
+		<CreateModule>..\..\..\output\binutils\CreateModule.exe</CreateModule>
+		<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+		<OutputPath>..\..\..\modules\Decisions.Monitoring.InfluxData\Decisions.Monitoring.InfluxData.Framework\bin\Debug</OutputPath>
+		<Configuration>Debug</Configuration>
+		<BuildDest>..\..\..\output\binservices</BuildDest>
+		<LibPath>..\..\..\lib</LibPath>
+	</PropertyGroup>
+	
+	<Target Name="build_all">
+		<CallTarget Targets="clean"/>
+		<CallTarget Targets="Build"/>
+	</Target>
+	
+	<Target Name="clean">
+		<RemoveDir Directories=".\obj\" ContinueOnError="true"/>
+	</Target>
+	
+	<ItemGroup>
+		<Compile Include="**\*.cs" Exclude="obj\**.*"/>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Reference Include="..\..\..\lib\decisions\DecisionsFramework.dll" />
+		<Reference Include="$(LibPath)\JSON.NET\Newtonsoft.Json.dll" />
+		<Reference Include="Microsoft.CSharp" />
+	</ItemGroup>
+	
+	<Import Project="$(LibPath)\msbuild\decisions.net.Targets" />
+	
+	<Target Name="AfterBuild">
+		<Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(BuildDest)" />
+	</Target> 
+</Project>

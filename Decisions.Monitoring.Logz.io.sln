@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30309.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Decisions.Monitoring.Logz.io", "Decisions.Monitoring.Logz.io\Decisions.Monitoring.Logz.io.csproj", "{062CB92F-4F00-4B43-8181-A6195BA77BE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Decisions.Monitoring.Logz.io.TestSuit", "Decisions.Monitoring.Logz.io.TestSuit\Decisions.Monitoring.Logz.io.TestSuit.csproj", "{8D64071D-6664-49D0-AC20-CE5FD26697E4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{062CB92F-4F00-4B43-8181-A6195BA77BE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{062CB92F-4F00-4B43-8181-A6195BA77BE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{062CB92F-4F00-4B43-8181-A6195BA77BE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{062CB92F-4F00-4B43-8181-A6195BA77BE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D64071D-6664-49D0-AC20-CE5FD26697E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D64071D-6664-49D0-AC20-CE5FD26697E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D64071D-6664-49D0-AC20-CE5FD26697E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D64071D-6664-49D0-AC20-CE5FD26697E4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3841E397-931E-488E-8AEC-4361249CE08E}
+	EndGlobalSection
+EndGlobal
