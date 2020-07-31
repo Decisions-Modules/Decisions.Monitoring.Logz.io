@@ -13,14 +13,17 @@ namespace Decisions.Monitoring.Logz.io.Utility
         private static string LogType = "DecisionsLog";
         private static string MetricsType = "DecisionsMetrics";
 
-        public static bool SendLog(LogzCredential connection, params LogData[] log)
+        public static bool SendLog(LogzCredential connection, params LogData[] logs)
         {
+            if (connection == null || string.IsNullOrEmpty(connection.LogToken) || string.IsNullOrEmpty(connection.BaseUrl))
+                return false;
             try
             {
-                var logData = log.Select((it) => new JsonLogData(it)).ToArray();
+                var logData = logs.Select((it) => new JsonLogData(it)).ToArray();
                 var resp = PostRequest<LogzErrorResponse, JsonLogData>(connection, $"?token={connection.LogToken}&type={LogType}", logData);
                 return true;
-            } catch 
+            }
+            catch
             {
                 return false;
             }
@@ -28,6 +31,9 @@ namespace Decisions.Monitoring.Logz.io.Utility
 
         public static bool SendMetrics(LogzCredential connection, params LogzMetricsData[] metris)
         {
+            if (connection == null || string.IsNullOrEmpty(connection.MetricsToken) || string.IsNullOrEmpty(connection.BaseUrl))
+                return false;
+
             try
             {
                 var resp = PostRequest<LogzErrorResponse, LogzMetricsData>(connection, $"?token={connection.MetricsToken}&type={MetricsType}", metris);
@@ -43,7 +49,6 @@ namespace Decisions.Monitoring.Logz.io.Utility
         {
             public DateTime TimeStamp { get; set; }
             public string Level { get; set; }
-            public string LevelName { get; set; }
             public string Category { get; set; }
             public string Message { get; set; }
             public int ThreadId { get; set; }
@@ -54,25 +59,13 @@ namespace Decisions.Monitoring.Logz.io.Utility
             public JsonLogData(LogData log)
             {
                 TimeStamp = log.TimeStamp;
-                LevelName = log.LevelName;
-                Category = log.Category ;
-                Message = log.Message; 
+                Level = log.LevelName;
+                Category = log.Category;
+                Message = log.Message;
                 ThreadId = log.ThreadId;
                 Exception = log.Exception?.ToString();
                 SessionID = log.SessionID;
-                Activity = log.Activity; 
-
-                LogSeverity[] values = (LogSeverity[])Enum.GetValues(typeof(LogSeverity));
-                var levels = new StringBuilder();
-                foreach (var lvl in values)
-                {
-                    if (log.Level.HasFlag(lvl))
-                    {
-                        if (levels.Length > 0)
-                            levels.Append(" ");
-                        levels.Append(lvl.ToString());
-                    }
-                }
+                Activity = log.Activity;
             }
         }
 

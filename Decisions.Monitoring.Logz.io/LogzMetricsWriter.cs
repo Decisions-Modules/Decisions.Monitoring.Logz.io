@@ -11,43 +11,62 @@ using System.Threading.Tasks;
 
 namespace Decisions.Monitoring.Logz.io
 {
-    public class LogzMetricsWriter : IProfilerDetailWriter, ILogWriter
+    public class LogzMetricsWriter : LogzBaseWriter, IProfilerDetailWriter, IInitializable
     {
-        LogzCredential Credentials { get { return null; } }
-
         public void Initialize()
         {
-
+            ProfilerService.DetailWriter = this;
         }
 
         public void WriteDetail(ProfileWriterData header, ProfilerDetail[] details, TimeSpan time)
         {
-            var metrics = new List<LogzMetricsData>(details.Length);
-            foreach (ProfilerDetail eachEntry in details)
+            var metrics = new LogzMetricsData()
             {
-                var item = new LogzMetricsData()
+                Metrics = new LogzMetrics() { TotalMilliseconds = time.TotalMilliseconds },
+                Dimensions = new LogzDimensions()
                 {
-                    Metrics = new LogzMetrics() { Count = eachEntry.Count },
-                    Dimensions = new LogzDimensions()
-                    {
-                        Name = header.Name,
-                        Parents = header.Parents,
-                        ProfilerType = header.type.ToString(),
+                    Name = header.Name,
+                    Parents = header.Parents,
+                    ProfilerType = header.type.ToString(),
+                }
+            };
 
-                        Message = eachEntry.Message,
-                        DetailType = eachEntry.DetailType.ToString(),
-                    }
-                };
-                metrics.Add(item);
+            if (details != null)
+            {
+                var message = new StringBuilder();
+                foreach (var item in details)
+                {
+                    message.AppendLine($"{item.Count} times: {item.DetailType} {item.Message}");
+                }
+                metrics.Dimensions.Details = message.ToString();
             }
 
-            LogzApi.SendMetrics(Credentials, metrics.ToArray());
+            LogzApi.SendMetrics(Credentials, metrics);
 
+            /* if (details != null && details.Length > 0)
+             {
+                 var metrics = new List<LogzMetricsData>();
+                 foreach (ProfilerDetail eachEntry in details)
+                 {
+                     var item = new LogzMetricsData()
+                     {
+                         Metrics = new LogzMetrics() { Count = eachEntry.Count },
+                         Dimensions = new LogzDimensions()
+                         {
+                             Name = header.Name,
+                             Parents = header.Parents,
+                             ProfilerType = header.type.ToString(),
+
+                             Message = eachEntry.Message,
+                             DetailType = eachEntry.DetailType.ToString(),
+                         }
+                     };
+                     metrics.Add(item);
+                 }
+                 LogzApi.SendMetrics(Credentials, metrics.ToArray());
+             }*/
         }
 
-        public void Write(LogData log)
-        {
-            LogzApi.SendLog(Credentials, log);
-        }
+
     }
 }

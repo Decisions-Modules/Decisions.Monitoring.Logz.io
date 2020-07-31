@@ -1,4 +1,4 @@
-#Re quires -RunAsAdministrator
+#Requires -RunAsAdministrator
 
 param (
     [Parameter(Mandatory=$false)][string]$msbuild,

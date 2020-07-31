@@ -18,7 +18,7 @@ namespace Decisions.Monitoring.Logz.io.Data
 
     public class LogzMetrics
     {
-        public long Count { get; set; }
+        public double TotalMilliseconds { get; set; }
     }
 
     public class LogzDimensions
@@ -27,7 +27,6 @@ namespace Decisions.Monitoring.Logz.io.Data
         public string Parents { get; set; }
         public string ProfilerType { get; set; }
 
-        public string Message { get; set; }
-        public string DetailType { get; set; }
+        public string Details { get; set; }
     }
 }

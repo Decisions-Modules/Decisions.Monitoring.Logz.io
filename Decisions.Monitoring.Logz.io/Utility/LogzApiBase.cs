@@ -25,7 +25,7 @@ namespace Decisions.Monitoring.Logz.io.Utility
 
         private static string ParseRequestContent<T>(T content)
         {
-            string data = JsonConvert.SerializeObject(content);//, Formatting.None, jsonSettings);
+            string data = JsonConvert.SerializeObject(content);
             return data;
         }
         private static void CheckResponse(HttpResponseMessage response)
@@ -33,7 +33,6 @@ namespace Decisions.Monitoring.Logz.io.Utility
             if (!response.IsSuccessStatusCode)
             {
                 var err = ParseResponse<LogzErrorResponse>(response);
-                //throw new AdobeSignException(response.ReasonPhrase, response.StatusCode);
             };
         }
 
@@ -42,7 +41,7 @@ namespace Decisions.Monitoring.Logz.io.Utility
 
             var responseString = response.Content.ReadAsStringAsync().Result;
 
-            var result = JsonConvert.DeserializeObject<R>(responseString);//, jsonSettings);
+            var result = JsonConvert.DeserializeObject<R>(responseString);
 
             return result;
         }

@@ -8,11 +8,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Decisions.Monitoring.Logz.io.TestSuit
 {
     [TestClass]
-    public class UnitTest1
+    public class LogzIoTest
     {
         LogzCredential credential = new LogzCredential() {
-            LogToken = "ixibrtOtQpXGedjruzVmNTGekpCSWYsl",
-            MetricsToken = "BjUxqlUIdvXGOPOpzWfVYBNEnUxkYVHV"
+            BaseUrl = LogzSettings.DefaultBaseUrl,
+
         };
 
         [TestMethod]
@@ -24,6 +24,7 @@ namespace Decisions.Monitoring.Logz.io.TestSuit
                 new LogData(DateTime.Now, LogSeverity.Debug, "category", "message"){ SessionID = "sessionid", Activity="activity", Exception = new InvalidOperationException("TestException")},
                 new LogData(DateTime.Now, LogSeverity.Fatal | LogSeverity.Info , "category", "message"){ SessionID = "sessionid", Activity="activity"},
                 new LogData(DateTime.Now, LogSeverity.All , "category", "message"){ SessionID = "sessionid", Activity="activity"},
+                new LogData(DateTime.Now, LogSeverity.None , "category", "message"){ SessionID = "sessionid", Activity="activity"},
                 new LogData()
             };
             var res = LogzApi.SendLog(credential, data);
