@@ -10,8 +10,8 @@ namespace Decisions.Monitoring.Logz.io.Utility
 {
     public static partial class LogzApi
     {
-        private static string LogType = "DecisionsLog";
-        private static string MetricsType = "DecisionsMetrics";
+        private static readonly string logType = "DecisionsLog";
+        private static readonly string metricsType = "DecisionsMetrics";
 
         public static bool SendLog(LogzCredential connection, params LogData[] logs)
         {
@@ -20,7 +20,7 @@ namespace Decisions.Monitoring.Logz.io.Utility
             try
             {
                 var logData = logs.Select((it) => new JsonLogData(it)).ToArray();
-                var resp = PostRequest<LogzErrorResponse, JsonLogData>(connection, $"?token={connection.LogToken}&type={LogType}", logData);
+                var resp = PostRequest<Object, JsonLogData>(connection, $"?token={connection.LogToken}&type={LogzApi.logType}", logData);
                 return true;
             }
             catch
@@ -36,7 +36,7 @@ namespace Decisions.Monitoring.Logz.io.Utility
 
             try
             {
-                var resp = PostRequest<LogzErrorResponse, LogzMetricsData>(connection, $"?token={connection.MetricsToken}&type={MetricsType}", metris);
+                var resp = PostRequest<Object, LogzMetricsData>(connection, $"?token={connection.MetricsToken}&type={LogzApi.metricsType}", metris);
                 return true;
             }
             catch

@@ -28,12 +28,14 @@ namespace Decisions.Monitoring.Logz.io.Utility
             string data = JsonConvert.SerializeObject(content);
             return data;
         }
-        private static void CheckResponse(HttpResponseMessage response)
+        private static LogzErrorResponse CheckResponse(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {
                 var err = ParseResponse<LogzErrorResponse>(response);
+                return err;
             };
+            return null;
         }
 
         private static R ParseResponse<R>(HttpResponseMessage response) where R : new()

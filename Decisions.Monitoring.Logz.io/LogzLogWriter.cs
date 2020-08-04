@@ -11,14 +11,21 @@ namespace Decisions.Monitoring.Logz.io
 {
     public class LogzLogWriter : LogzBaseWriter, ILogWriter, IInitializable
     {
+        private Buffer<LogData> buffer;
         public void Initialize()
         {
+            buffer = new Buffer<LogData>("Decisions.Logz sending logs", TimeSpan.FromSeconds(10), SendLogs);
             Log.AddLogWriter(this);
         }
 
         public void Write(LogData log)
         {
-            LogzApi.SendLog(Credentials, log);
+            buffer.AddData(log);
+        }
+
+        private void SendLogs(LogData[] logs)
+        {
+            LogzApi.SendLog(Credentials, logs);
         }
     }
 }
