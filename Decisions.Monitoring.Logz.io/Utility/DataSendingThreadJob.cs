@@ -1,5 +1,7 @@
-﻿using DecisionsFramework;
+﻿using Decisions.Monitoring.Logz.io.Data;
+using DecisionsFramework;
 using DecisionsFramework.Design.Flow.QuickAdd;
+using DecisionsFramework.ServiceLayer;
 using DecisionsFramework.Utilities;
 using System;
 using System.Collections.Generic;
@@ -10,21 +12,22 @@ using System.Threading.Tasks;
 
 namespace Decisions.Monitoring.Logz.io.Utility
 {
-    class Buffer<T> : IThreadJob
+    abstract class DataSendingThreadJob<T> : IThreadJob
     {
         private readonly List<T> dataList = new List<T>();
         private TimeSpan delay;
         private bool isStarted = false;
-        private readonly Action<T[]> bufferReceiver;
+        private string queueName;
 
-        public Buffer(string threadJobId,TimeSpan runDelay, Action<T[]> aBufferReceiver)
+        public string Id { get; } = Guid.NewGuid().ToString();
+
+        public DataSendingThreadJob(string aQueueName, TimeSpan runDelay)
         {
             delay = runDelay;
-            Id = threadJobId;
-            bufferReceiver = aBufferReceiver;
+            queueName = aQueueName;
         }
 
-        public void AddData(T data)
+        public void AddItem(T data)
         {
             lock (this)
             {
@@ -32,8 +35,6 @@ namespace Decisions.Monitoring.Logz.io.Utility
                 TryToStart();
             }
         }
-
-        public string Id { get; }
 
         public void Run()
         {
@@ -44,7 +45,7 @@ namespace Decisions.Monitoring.Logz.io.Utility
                 data = dataList.ToArray();
                 dataList.Clear();
             };
-            bufferReceiver(data);
+            SendData(data);
         }
 
         private void TryToStart()
@@ -53,7 +54,10 @@ namespace Decisions.Monitoring.Logz.io.Utility
             isStarted = true;
 
             var startTime = DateUtilities.Now().Add(delay);
-            ThreadJobService.AddToQueue(startTime, this);
+            ThreadJobService.AddToQueue(startTime, this, queueName);
         }
+
+        protected abstract void SendData(T[] data);
+
     }
 }

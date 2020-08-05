@@ -47,13 +47,13 @@
   <ItemGroup>
     <Compile Include="Data\LogzErrorResponse.cs" />
     <Compile Include="Data\LogzMetricData.cs" />
-    <Compile Include="LogzBaseWriter.cs" />
     <Compile Include="LogzLogWriter.cs" />
     <Compile Include="LogzSettings.cs" />
     <Compile Include="LogzMetricsWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\LogzCredential.cs" />
-    <Compile Include="Utility\Buffer.cs" />
+    <Compile Include="Utility\CredentialHelper.cs" />
+    <Compile Include="Utility\DataSendingThreadJob.cs" />
     <Compile Include="Utility\LogzApi.cs" />
     <Compile Include="Utility\LogzApiBase.cs" />
   </ItemGroup>

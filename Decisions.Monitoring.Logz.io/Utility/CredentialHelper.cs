@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Decisions.Monitoring.Logz.io
+namespace Decisions.Monitoring.Logz.io.Utility
 {
-    public abstract class LogzBaseWriter
+    static class CredentialHelper
     {
-        protected LogzCredential Credentials
+        public static LogzCredential Credentials
         {
             get
             {

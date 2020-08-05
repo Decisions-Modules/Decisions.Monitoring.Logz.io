@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace Decisions.Monitoring.Logz.io
 {
-    public class LogzMetricsWriter : LogzBaseWriter, IProfilerDetailWriter, IInitializable
+    public class LogzMetricsWriter : IProfilerDetailWriter, IProfilerSummaryWriter, IInitializable
     {
-        private Buffer<LogzMetricsData> buffer;
+        private MetricsSendingThreadJob metricSendingJob = new MetricsSendingThreadJob();
 
         public void Initialize()
         {
-            buffer = new Buffer<LogzMetricsData>("Decisions.Logz sending metrics", TimeSpan.FromSeconds(10), SendMetrics);
             ProfilerService.DetailWriter = this;
+            ProfilerService.SummaryWriter = this;
         }
 
         public void WriteDetail(ProfileWriterData header, ProfilerDetail[] details, TimeSpan time)
@@ -47,13 +47,25 @@ namespace Decisions.Monitoring.Logz.io
                 metrics.Metrics.DetailCount = DetailCount;
             }
 
-            buffer.AddData(metrics);
+            metricSendingJob.AddItem(metrics);
         }
 
-        private void SendMetrics(LogzMetricsData[] metrics)
+        public void WriteSummary(ProfileWriterData header, ProfileTimeSummary timeSummary)
         {
-            if (!LogzApi.SendMetrics(Credentials, metrics))
-                LogConstants.SYSTEM.Info("Decisions.Monitoring.Logz.io failed to send Metrics");
+            
+        }
+
+    }
+
+    class MetricsSendingThreadJob : DataSendingThreadJob<LogzMetricsData>
+    {
+        public MetricsSendingThreadJob() : base("Decisions.Logz metrics queue", TimeSpan.FromSeconds(10))
+        { }
+
+        protected override void SendData(LogzMetricsData[] metrics)
+        {
+            if (!LogzApi.SendMetrics(CredentialHelper.Credentials, metrics))
+                LogConstants.SYSTEM.Error("Decisions.Monitoring.Logz.io failed to send Metrics");
         }
     }
 }

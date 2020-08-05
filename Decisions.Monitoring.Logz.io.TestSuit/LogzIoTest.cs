@@ -36,8 +36,8 @@ namespace Decisions.Monitoring.Logz.io.TestSuit
         public void MetricsTest()
         {
             var data = new LogzMetricsData[] {
-                new LogzMetricsData(){ Metrics = new LogzMetrics{ Count = 1}, Dimensions = new LogzDimensions { Name="Name", Parents = "", ProfilerType="FlowStep", Message = "metrics message",  DetailType = "" } },
-                new LogzMetricsData(){ Metrics = new LogzMetrics{ Count = 2}, Dimensions = new LogzDimensions { Name="Name", Message = "metrics message" } },
+                new LogzMetricsData(){ Metrics = new LogzMetrics{ DetailCount = 1}, Dimensions = new LogzDimensions { Name="Name", Parents = "", ProfilerType="FlowStep", Message = "metrics message",  DetailType = "" } },
+                new LogzMetricsData(){ Metrics = new LogzMetrics{ DetailCount = 2}, Dimensions = new LogzDimensions { Name="Name", Details = "metrics message" } },
             };
             var res = LogzApi.SendMetrics(credential, data);
             Assert.IsTrue(res);
