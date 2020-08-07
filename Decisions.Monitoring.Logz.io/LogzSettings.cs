@@ -4,6 +4,7 @@ using DecisionsFramework.ServiceLayer;
 using DecisionsFramework.ServiceLayer.Actions;
 using DecisionsFramework.ServiceLayer.Actions.Common;
 using DecisionsFramework.ServiceLayer.Utilities;
+using DecisionsFramework.Utilities.validation.Rules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,16 +21,29 @@ namespace Decisions.Monitoring.Logz.io.Data
         [ORMField]
         [DataMember]
         [PropertyClassificationAttribute("Base Url", 1)]
+        [EmptyStringRule("Base Url is required")]
         public string BaseUrl { get; set; }
 
         [ORMField]
         [DataMember]
-        [PropertyClassificationAttribute("Log Token", 2)]
+        [PropertyClassificationAttribute("Send Logs", 2)]
+        public bool SendLogs { get; set; }
+
+        [ORMField]
+        [DataMember]
+        [PropertyHiddenByValue(nameof(SendLogs), false, true)]
+        [PropertyClassificationAttribute("Log Token", 3)]
         public string LogToken { get; set; }
 
         [ORMField]
         [DataMember]
-        [PropertyClassificationAttribute("Metrics Token", 3)]
+        [PropertyClassificationAttribute("Send Metrics", 4)]
+        public bool SendMetrics { get; set; }
+
+        [ORMField]
+        [DataMember]
+        [PropertyHiddenByValue(nameof(SendMetrics), false, true)]
+        [PropertyClassificationAttribute("Metrics Token", 5)]
         public string MetricsToken { get; set; }
 
         public override BaseActionType[] GetActions(AbstractUserContext userContext, EntityActionType[] types)

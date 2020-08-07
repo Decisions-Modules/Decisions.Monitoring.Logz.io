@@ -17,9 +17,9 @@ namespace Decisions.Monitoring.Logz.io.Utility
                 LogzSettings settings = ModuleSettingsAccessor<LogzSettings>.GetSettings();
                 return new LogzCredential()
                 {
-                    BaseUrl = settings.BaseUrl,
-                    LogToken = settings.LogToken,
-                    MetricsToken = settings.MetricsToken
+                    BaseUrl =  settings.BaseUrl,
+                    LogToken = settings.SendLogs ? settings.LogToken : "",
+                    MetricsToken = settings.SendMetrics ? settings.MetricsToken : ""
                 };
             }
         }
