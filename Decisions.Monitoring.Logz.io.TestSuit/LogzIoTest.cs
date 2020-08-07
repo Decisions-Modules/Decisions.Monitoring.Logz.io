@@ -12,8 +12,8 @@ namespace Decisions.Monitoring.Logz.io.TestSuit
     {
         LogzCredential credential = new LogzCredential() {
             BaseUrl = LogzSettings.DefaultBaseUrl,
-            LogToken = "your token",
-            MetricsToken = "your token"
+            LogToken = Tokens.LogToken,
+            MetricsToken = Tokens.MetricsToken
         };
 
         [TestMethod]
