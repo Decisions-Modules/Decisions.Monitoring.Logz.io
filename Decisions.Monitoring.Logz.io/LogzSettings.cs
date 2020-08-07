@@ -1,4 +1,5 @@
-﻿using DecisionsFramework.Data.ORMapper;
+﻿using DecisionsFramework;
+using DecisionsFramework.Data.ORMapper;
 using DecisionsFramework.Design.Properties;
 using DecisionsFramework.ServiceLayer;
 using DecisionsFramework.ServiceLayer.Actions;
@@ -16,7 +17,7 @@ namespace Decisions.Monitoring.Logz.io.Data
 {
     [ORMEntity]
     [DataContract]
-    public class LogzSettings : AbstractModuleSettings, IInitializable
+    public class LogzSettings : AbstractModuleSettings, IValidationSource, IInitializable
     {
         [ORMField]
         [DataMember]
@@ -62,6 +63,20 @@ namespace Decisions.Monitoring.Logz.io.Data
                 me.BaseUrl = DefaultBaseUrl;
                 ModuleSettingsAccessor<LogzSettings>.SaveSettings();
             }
+        }
+
+        public ValidationIssue[] GetValidationIssues()
+        {
+            List<ValidationIssue> issues = new List<ValidationIssue>();
+
+            if (SendLogs && string.IsNullOrEmpty(LogToken))
+                issues.Add(new ValidationIssue(this, "Log Token must be supplied", "", BreakLevel.Fatal, nameof(LogToken)));
+
+            if (SendMetrics && string.IsNullOrEmpty(MetricsToken))
+                issues.Add(new ValidationIssue(this, "Metrics Token must be supplied", "", BreakLevel.Fatal, nameof(MetricsToken)));
+
+            return issues.ToArray();
+
         }
     }
 }
