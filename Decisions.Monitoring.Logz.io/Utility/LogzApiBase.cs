@@ -63,8 +63,5 @@ namespace Decisions.Monitoring.Logz.io.Utility
             CheckResponse(response);
             return ParseResponse<R>(response);
         }
-
-
-
     }
 }

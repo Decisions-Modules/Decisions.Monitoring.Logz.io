@@ -68,7 +68,5 @@ namespace Decisions.Monitoring.Logz.io.Utility
                 Activity = log.Activity;
             }
         }
-
-
     }
 }

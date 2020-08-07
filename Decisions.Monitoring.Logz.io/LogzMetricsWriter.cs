@@ -11,50 +11,46 @@ using System.Threading.Tasks;
 
 namespace Decisions.Monitoring.Logz.io
 {
-    public class LogzMetricsWriter : IProfilerDetailWriter, IProfilerSummaryWriter, IInitializable
+    public class LogzMetricsWriter : IProfilerDetailWriter, IInitializable
     {
-        private MetricsSendingThreadJob metricSendingJob = new MetricsSendingThreadJob();
+        private readonly MetricsSendingThreadJob metricSendingJob = new MetricsSendingThreadJob();
 
         public void Initialize()
         {
             ProfilerService.DetailWriter = this;
-            ProfilerService.SummaryWriter = this;
         }
 
         public void WriteDetail(ProfileWriterData header, ProfilerDetail[] details, TimeSpan time)
         {
+            if (header.type == ProfilerType.Usage && details != null && details.Length > 0)
+            {
+                var metrics = new List<LogzMetricsData>(details.Length);
+                foreach (ProfilerDetail eachEntry in details)
+                {
+                    metrics.Add(CreateMetrics(header, eachEntry));
+                }
+                metricSendingJob.AddItem(metrics.ToArray());
+            }
+        }
+
+        private LogzMetricsData CreateMetrics(ProfileWriterData header, ProfilerDetail detail)
+        {
+            var settings = Settings.GetSettings();
+
             var metrics = new LogzMetricsData()
             {
-                Metrics = new LogzMetrics() { TimeMilliseconds = time.TotalMilliseconds },
+                Metrics = new LogzMetrics() { DetailCount = detail.Count },
                 Dimensions = new LogzDimensions()
                 {
                     Name = header.Name,
-                    Parents = header.Parents,
-                    ProfilerType = header.type.ToString(),
+                    Details = detail.Message,
+                    HostName = settings.HostName,
+                    BasePortalUrlName = settings.PortalBaseUrl,
+                    DecisionsVersion = DecisionsVersion.VERSION
                 }
             };
-
-            if (details != null)
-            {
-                int DetailCount = 0;
-                var message = new StringBuilder();
-                foreach (var item in details)
-                {
-                    message.AppendLine($"{item.Count} times: {item.DetailType} {item.Message}");
-                    DetailCount += item.Count;
-                }
-                metrics.Dimensions.Details = message.ToString();
-                metrics.Metrics.DetailCount = DetailCount;
-            }
-
-            metricSendingJob.AddItem(metrics);
+            return metrics;
         }
-
-        public void WriteSummary(ProfileWriterData header, ProfileTimeSummary timeSummary)
-        {
-            
-        }
-
     }
 
     class MetricsSendingThreadJob : DataSendingThreadJob<LogzMetricsData>

@@ -18,16 +18,15 @@ namespace Decisions.Monitoring.Logz.io.Data
 
     public class LogzMetrics
     {
-        public double TimeMilliseconds { get; set; }
         public int DetailCount { get; set; } = 0;
     }
 
     public class LogzDimensions
     {
         public string Name { get; set; }
-        public string Parents { get; set; }
-        public string ProfilerType { get; set; }
-
         public string Details { get; set; }
+        public string HostName { get; set; }
+        public string BasePortalUrlName { get; set; }
+        public string DecisionsVersion { get; set; }
     }
 }

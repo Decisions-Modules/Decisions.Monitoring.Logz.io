@@ -27,11 +27,11 @@ namespace Decisions.Monitoring.Logz.io.Utility
             queueName = aQueueName;
         }
 
-        public void AddItem(T data)
+        public void AddItem(params T[] data)
         {
             lock (this)
             {
-                dataList.Add(data);
+                dataList.AddRange(data);
                 TryToStart();
             }
         }

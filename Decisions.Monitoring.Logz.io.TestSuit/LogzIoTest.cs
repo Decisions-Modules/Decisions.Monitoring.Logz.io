@@ -12,8 +12,8 @@ namespace Decisions.Monitoring.Logz.io.TestSuit
     {
         LogzCredential credential = new LogzCredential() {
             BaseUrl = LogzSettings.DefaultBaseUrl,
-            LogToken = "ixibrtOtQpXGedjruzVmNTGekpCSWYsl",
-            MetricsToken = "BjUxqlUIdvXGOPOpzWfVYBNEnUxkYVHV"
+            LogToken = "your token",
+            MetricsToken = "your token"
         };
 
         [TestMethod]
@@ -36,7 +36,7 @@ namespace Decisions.Monitoring.Logz.io.TestSuit
         public void MetricsTest()
         {
             var data = new LogzMetricsData[] {
-                new LogzMetricsData(){ Metrics = new LogzMetrics{ DetailCount = 1}, Dimensions = new LogzDimensions { Name="Name", Parents = "", ProfilerType="FlowStep", Message = "metrics message",  DetailType = "" } },
+                new LogzMetricsData(){ Metrics = new LogzMetrics{ DetailCount = 1}, Dimensions = new LogzDimensions { Name="Name", Details = "Test Detail", HostName = "HostName",  BasePortalUrlName = "BasePortalUrlName", DecisionsVersion="DecisionsVersion" } },
                 new LogzMetricsData(){ Metrics = new LogzMetrics{ DetailCount = 2}, Dimensions = new LogzDimensions { Name="Name", Details = "metrics message" } },
             };
             var res = LogzApi.SendMetrics(credential, data);

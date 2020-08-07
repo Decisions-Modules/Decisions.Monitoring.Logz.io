@@ -12,6 +12,5 @@ namespace Decisions.Monitoring.Logz.io.Data
         public int? successfulLines;
         public int? oversizedLines;
         public int? emptyLogLines;
-
     }
 }
