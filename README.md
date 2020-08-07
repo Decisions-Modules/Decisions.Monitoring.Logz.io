@@ -15,5 +15,6 @@ Here are Logz Kibana screenhots when the both token fields are set to the same t
 ![screenshot of sample](https://github.com/Decisions-Modules/Decisions.Monitoring.Logz.io/blob/master/KibanaMetrics.png)
 
 <br />
-This is Logz Metrics screenshot
-![screenshot of sample](https://github.com/Decisions-Modules/Decisions.Monitoring.Logz.io/blob/master/Metrics.png)
+This is Logz Metrics screenshot<br />
+
+![screenshot of sample](https://github.com/Decisions-Modules/Decisions.Monitoring.Logz.io/blob/master/Metrics.png?raw=true)
