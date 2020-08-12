@@ -18,7 +18,7 @@ namespace Decisions.Monitoring.Logz.io.Data
 
     public class LogzMetrics
     {
-        public int DetailCount { get; set; } = 0;
+        public int DetailCount { get; set; }
     }
 
     public class LogzDimensions
