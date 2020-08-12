@@ -8,7 +8,7 @@ namespace Decisions.Monitoring.Logz.io.TestSuit
 {
     static class Tokens
     {
-        public static string LogToken = "your token";
-        public static string MetricsToken = "your token";
+        public static string LogToken { get; } = "put your token here";
+        public static string MetricsToken { get; } = "put your token here";
     }
 }

@@ -13,7 +13,7 @@ namespace Decisions.Monitoring.Logz.io.Data
         public LogzMetrics Metrics { get; set; } 
 
         [JsonProperty(PropertyName = "dimensions")]
-        public LogzDimensions Dimensions { get; set; } = new LogzDimensions();
+        public LogzDimensions Dimensions { get; set; }
     }
 
     public class LogzMetrics
