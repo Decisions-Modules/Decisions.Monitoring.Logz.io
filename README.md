@@ -1,5 +1,7 @@
 # Decisions.Monitoring.Logz.io Integration
 
+Version: 6.x
+
 ## Settings
 
 Before using this module you should setup it.<br /> 
