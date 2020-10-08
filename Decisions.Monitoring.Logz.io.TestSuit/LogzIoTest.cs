@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Principal;
 using Decisions.Monitoring.Logz.io.Data;
 using Decisions.Monitoring.Logz.io.Utility;
 using DecisionsFramework;
@@ -10,7 +9,8 @@ namespace Decisions.Monitoring.Logz.io.TestSuit
     [TestClass]
     public class LogzIoTest
     {
-        LogzCredential credential = new LogzCredential() {
+        private readonly LogzCredential credential = new LogzCredential
+        {
             BaseUrl = LogzSettings.DefaultBaseUrl,
             LogToken = Tokens.LogToken,
             MetricsToken = Tokens.MetricsToken
@@ -21,11 +21,19 @@ namespace Decisions.Monitoring.Logz.io.TestSuit
         {
             Log.LogToFile = false;
 
-            var data = new LogData[] {
-                new LogData(DateTime.Now, LogSeverity.Debug, "category", "message"){ SessionID = "sessionid", Activity="activity", Exception = new InvalidOperationException("TestException")},
-                new LogData(DateTime.Now, LogSeverity.Fatal | LogSeverity.Info , "category", "message"){ SessionID = "sessionid", Activity="activity"},
-                new LogData(DateTime.Now, LogSeverity.All , "category", "message"){ SessionID = "sessionid", Activity="activity"},
-                new LogData(DateTime.Now, LogSeverity.None , "category", "message"){ SessionID = "sessionid", Activity="activity"},
+            var data = new[]
+            {
+                new LogData(DateTime.Now, LogSeverity.Debug, "category", "message")
+                {
+                    SessionID = "sessionid", Activity = "activity",
+                    Exception = new InvalidOperationException("TestException")
+                },
+                new LogData(DateTime.Now, LogSeverity.Fatal | LogSeverity.Info, "category", "message")
+                    {SessionID = "sessionid", Activity = "activity"},
+                new LogData(DateTime.Now, LogSeverity.All, "category", "message")
+                    {SessionID = "sessionid", Activity = "activity"},
+                new LogData(DateTime.Now, LogSeverity.None, "category", "message")
+                    {SessionID = "sessionid", Activity = "activity"},
                 new LogData()
             };
             var res = LogzApi.SendLog(credential, data);
@@ -35,9 +43,22 @@ namespace Decisions.Monitoring.Logz.io.TestSuit
         [TestMethod]
         public void MetricsTest()
         {
-            var data = new LogzMetricsData[] {
-                new LogzMetricsData(){ Metrics = new LogzMetrics{ DetailCount = 1}, Dimensions = new LogzDimensions { Name="Name", Details = "Test Detail", HostName = "HostName",  BasePortalUrlName = "BasePortalUrlName", DecisionsVersion="DecisionsVersion" } },
-                new LogzMetricsData(){ Metrics = new LogzMetrics{ DetailCount = 2}, Dimensions = new LogzDimensions { Name="Name", Details = "metrics message" } },
+            var data = new[]
+            {
+                new LogzMetricsData
+                {
+                    Metrics = new LogzMetrics {DetailCount = 1},
+                    Dimensions = new LogzDimensions
+                    {
+                        Name = "Name", Details = "Test Detail", HostName = "HostName",
+                        BasePortalUrlName = "BasePortalUrlName", DecisionsVersion = "DecisionsVersion"
+                    }
+                },
+                new LogzMetricsData
+                {
+                    Metrics = new LogzMetrics {DetailCount = 2},
+                    Dimensions = new LogzDimensions {Name = "Name", Details = "metrics message"}
+                }
             };
             var res = LogzApi.SendMetrics(credential, data);
             Assert.IsTrue(res);

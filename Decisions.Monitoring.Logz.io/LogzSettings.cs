@@ -1,4 +1,6 @@
-﻿using DecisionsFramework;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using DecisionsFramework;
 using DecisionsFramework.Data.ORMapper;
 using DecisionsFramework.Design.Properties;
 using DecisionsFramework.ServiceLayer;
@@ -6,12 +8,6 @@ using DecisionsFramework.ServiceLayer.Actions;
 using DecisionsFramework.ServiceLayer.Actions.Common;
 using DecisionsFramework.ServiceLayer.Utilities;
 using DecisionsFramework.Utilities.validation.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Decisions.Monitoring.Logz.io.Data
 {
@@ -19,6 +15,8 @@ namespace Decisions.Monitoring.Logz.io.Data
     [DataContract]
     public class LogzSettings : AbstractModuleSettings, IValidationSource, IInitializable
     {
+        public const string DefaultBaseUrl = "https://listener.logz.io:8071";
+
         [ORMField]
         [DataMember]
         [PropertyClassificationAttribute("Base Url", 1)]
@@ -47,17 +45,9 @@ namespace Decisions.Monitoring.Logz.io.Data
         [PropertyClassificationAttribute("Metrics Token", 5)]
         public string MetricsToken { get; set; }
 
-        public override BaseActionType[] GetActions(AbstractUserContext userContext, EntityActionType[] types)
-        {
-            List<BaseActionType> all = new List<BaseActionType>();
-            all.Add(new EditEntityAction(typeof(LogzSettings), "Edit", "Edit"));
-            return all.ToArray();
-        }
-
-        public const string DefaultBaseUrl = "https://listener.logz.io:8071";
         public void Initialize()
         {
-            LogzSettings me = ModuleSettingsAccessor<LogzSettings>.GetSettings();
+            var me = ModuleSettingsAccessor<LogzSettings>.GetSettings();
             if (string.IsNullOrEmpty(Id))
             {
                 me.BaseUrl = DefaultBaseUrl;
@@ -67,16 +57,24 @@ namespace Decisions.Monitoring.Logz.io.Data
 
         public ValidationIssue[] GetValidationIssues()
         {
-            List<ValidationIssue> issues = new List<ValidationIssue>();
+            var issues = new List<ValidationIssue>();
 
             if (SendLogs && string.IsNullOrEmpty(LogToken))
-                issues.Add(new ValidationIssue(this, "Log Token must be supplied", "", BreakLevel.Fatal, nameof(LogToken)));
+                issues.Add(new ValidationIssue(this, "Log Token must be supplied", "", BreakLevel.Fatal,
+                    nameof(LogToken)));
 
             if (SendMetrics && string.IsNullOrEmpty(MetricsToken))
-                issues.Add(new ValidationIssue(this, "Metrics Token must be supplied", "", BreakLevel.Fatal, nameof(MetricsToken)));
+                issues.Add(new ValidationIssue(this, "Metrics Token must be supplied", "", BreakLevel.Fatal,
+                    nameof(MetricsToken)));
 
             return issues.ToArray();
+        }
 
+        public override BaseActionType[] GetActions(AbstractUserContext userContext, EntityActionType[] types)
+        {
+            var all = new List<BaseActionType>();
+            all.Add(new EditEntityAction(typeof(LogzSettings), "Edit", "Edit"));
+            return all.ToArray();
         }
     }
 }

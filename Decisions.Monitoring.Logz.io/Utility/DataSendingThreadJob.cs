@@ -1,25 +1,16 @@
-﻿using Decisions.Monitoring.Logz.io.Data;
-using DecisionsFramework;
-using DecisionsFramework.Design.Flow.QuickAdd;
-using DecisionsFramework.ServiceLayer;
-using DecisionsFramework.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using DecisionsFramework;
+using DecisionsFramework.Utilities;
 
 namespace Decisions.Monitoring.Logz.io.Utility
 {
-    abstract class DataSendingThreadJob<T> : IThreadJob
+    internal abstract class DataSendingThreadJob<T> : IThreadJob
     {
         private readonly List<T> dataList = new List<T>();
-        private TimeSpan delay;
-        private bool isStarted = false;
-        private string queueName;
-
-        public string Id { get; } = Guid.NewGuid().ToString();
+        private readonly TimeSpan delay;
+        private readonly string queueName;
+        private bool isStarted;
 
         public DataSendingThreadJob(string aQueueName, TimeSpan runDelay)
         {
@@ -27,14 +18,7 @@ namespace Decisions.Monitoring.Logz.io.Utility
             queueName = aQueueName;
         }
 
-        public void AddItem(params T[] data)
-        {
-            lock (this)
-            {
-                dataList.AddRange(data);
-                TryToStart();
-            }
-        }
+        public string Id { get; } = Guid.NewGuid().ToString();
 
         public void Run()
         {
@@ -44,8 +28,19 @@ namespace Decisions.Monitoring.Logz.io.Utility
                 isStarted = false;
                 data = dataList.ToArray();
                 dataList.Clear();
-            };
+            }
+
+            ;
             SendData(data);
+        }
+
+        public void AddItem(params T[] data)
+        {
+            lock (this)
+            {
+                dataList.AddRange(data);
+                TryToStart();
+            }
         }
 
         private void TryToStart()
@@ -58,6 +53,5 @@ namespace Decisions.Monitoring.Logz.io.Utility
         }
 
         protected abstract void SendData(T[] data);
-
     }
 }

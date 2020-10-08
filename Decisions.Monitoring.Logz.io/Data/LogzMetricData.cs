@@ -1,16 +1,11 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Decisions.Monitoring.Logz.io.Data
 {
     public class LogzMetricsData
     {
         [JsonProperty(PropertyName = "metrics")]
-        public LogzMetrics Metrics { get; set; } 
+        public LogzMetrics Metrics { get; set; }
 
         [JsonProperty(PropertyName = "dimensions")]
         public LogzDimensions Dimensions { get; set; }
