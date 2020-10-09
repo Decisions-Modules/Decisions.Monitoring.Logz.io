@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Decisions.Monitoring.Logz.io.Data;
 using Decisions.Monitoring.Logz.io.Utility;
 using DecisionsFramework;
 using DecisionsFramework.ServiceLayer;
+using System;
 
 namespace Decisions.Monitoring.Logz.io
 {
@@ -16,19 +17,21 @@ namespace Decisions.Monitoring.Logz.io
 
         public void Write(LogData log)
         {
-            logSendingJob.AddItem(log);
+            var settings = Settings.GetSettings();
+            LogzLogData logData = new LogzLogData(log, settings.PortalBaseUrl, settings.HostName);
+            logSendingJob.AddItem(logData);
         }
     }
 
-    internal class LogSendingThreadJob : DataSendingThreadJob<LogData>
+    internal class LogSendingThreadJob : DataSendingThreadJob<LogzLogData>
     {
         public LogSendingThreadJob() : base("Decisions.Logz log queue", TimeSpan.FromSeconds(10))
         {
         }
 
-        protected override void SendData(LogData[] logs)
+        protected override void SendData(LogzLogData[] logs)
         {
-            LogzApi.SendLog(CredentialHelper.Credentials, logs);
+            LogzApi.SendLog(CredentialHelper.Credentials, logs); // We ignore log error because we cannot write log-error to log
         }
     }
 }

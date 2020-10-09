@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\LogzErrorResponse.cs" />
+    <Compile Include="Data\LogzLogData.cs" />
     <Compile Include="Data\LogzMetricData.cs" />
     <Compile Include="LogzLogWriter.cs" />
     <Compile Include="LogzSettings.cs" />
