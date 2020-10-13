@@ -20,6 +20,26 @@ namespace Decisions.Monitoring.Logz.io
         {
             // Do Nothing.  
         }
+    }
+
+    public class LogzMetricsWriter : IProfilerDetailWriter, IInitializable
+    {
+        private readonly MetricsSendingThreadJob metricSendingJob = new MetricsSendingThreadJob();
+
+        public void Initialize()
+        {
+            ProfilerService.DetailWriter = this;
+        }
+
+        public void WriteDetail(ProfileWriterData header, ProfilerDetail[] details, TimeSpan time)
+        {
+            if (header.type == ProfilerType.Usage && details != null && details.Length > 0)
+            {
+                var metrics = new List<LogzMetricsData>(details.Length);
+                foreach (var eachEntry in details) metrics.Add(CreateMetrics(header, eachEntry));
+                metricSendingJob.AddItem(metrics.ToArray());
+            }
+        }
 
         public void WriteHeartbeatData(HeartbeatData heartbeat)
         {
@@ -64,27 +84,7 @@ namespace Decisions.Monitoring.Logz.io
                     }, TimeSpan.Zero);
             }
         }
-    }
-
-    public class LogzMetricsWriter : IProfilerDetailWriter, IInitializable
-    {
-        private readonly MetricsSendingThreadJob metricSendingJob = new MetricsSendingThreadJob();
-
-        public void Initialize()
-        {
-            ProfilerService.DetailWriter = this;
-        }
-
-        public void WriteDetail(ProfileWriterData header, ProfilerDetail[] details, TimeSpan time)
-        {
-            if (header.type == ProfilerType.Usage && details != null && details.Length > 0)
-            {
-                var metrics = new List<LogzMetricsData>(details.Length);
-                foreach (var eachEntry in details) metrics.Add(CreateMetrics(header, eachEntry));
-                metricSendingJob.AddItem(metrics.ToArray());
-            }
-        }
-
+        
         private LogzMetricsData CreateMetrics(ProfileWriterData header, ProfilerDetail detail)
         {
             var settings = Settings.GetSettings();

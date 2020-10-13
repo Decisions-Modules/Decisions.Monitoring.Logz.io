@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DecisionsFramework">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Decisions\Decisions Services Manager\bin\DecisionsFramework.dll</HintPath>
+    <Reference Include="DecisionsFramework, Version=6.14.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\platform6\output\bincore\DecisionsFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
