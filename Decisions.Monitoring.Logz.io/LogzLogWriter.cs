@@ -18,7 +18,7 @@ namespace Decisions.Monitoring.Logz.io
         public void Write(LogData log)
         {
             var settings = Settings.GetSettings();
-            LogzLogData logData = new LogzLogData(log, settings.PortalBaseUrl, settings.HostName);
+            LogzLogData logData = new LogzLogData(log, settings.PortalBaseUrl, System.Environment.MachineName);
             logSendingJob.AddItem(logData);
         }
     }

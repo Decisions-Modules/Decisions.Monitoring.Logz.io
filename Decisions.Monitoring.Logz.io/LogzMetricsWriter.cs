@@ -96,7 +96,7 @@ namespace Decisions.Monitoring.Logz.io
                 {
                     Name = header.Name,
                     Details = detail.Message,
-                    HostName = settings.HostName,
+                    HostName = System.Environment.MachineName,
                     BasePortalUrlName = settings.PortalBaseUrl,
                     DecisionsVersion = DecisionsVersion.VERSION
                 }
