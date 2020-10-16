@@ -2,15 +2,30 @@
 using System.Runtime.Serialization;
 using DecisionsFramework;
 using DecisionsFramework.Data.ORMapper;
+using DecisionsFramework.Design.ConfigurationStorage.Attributes;
 using DecisionsFramework.Design.Properties;
 using DecisionsFramework.ServiceLayer;
 using DecisionsFramework.ServiceLayer.Actions;
 using DecisionsFramework.ServiceLayer.Actions.Common;
 using DecisionsFramework.ServiceLayer.Utilities;
 using DecisionsFramework.Utilities.validation.Rules;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Decisions.Monitoring.Logz.io.Data
 {
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum LogLevel
+    {
+        None = 0,
+        Debug = 1,
+        Info = 2,
+        Warn = 4,
+        Error = 8,
+        Fatal = 16
+    }
+
     [ORMEntity]
     [DataContract]
     public class LogzSettings : AbstractModuleSettings, IValidationSource, IInitializable
@@ -25,12 +40,12 @@ namespace Decisions.Monitoring.Logz.io.Data
 
         [ORMField]
         [DataMember]
-        [PropertyClassificationAttribute("Send Logs", 2)]
-        public bool SendLogs { get; set; }
+        [PropertyClassificationAttribute("Minimum Log Level to Send", 2)]
+        [EnumEditor]
+        public LogLevel MinSendLogLevel { get; set; }
 
-        [ORMField]
         [DataMember]
-        [PropertyHiddenByValue(nameof(SendLogs), false, true)]
+        [PropertyHiddenByValue(nameof(MinSendLogLevel), LogLevel.None, true)]
         [PropertyClassificationAttribute("Log Token", 3)]
         public string LogToken { get; set; }
 
@@ -47,10 +62,11 @@ namespace Decisions.Monitoring.Logz.io.Data
 
         public void Initialize()
         {
-            var me = ModuleSettingsAccessor<LogzSettings>.GetSettings();
+            var me = LogzSettings.Instance();
             if (string.IsNullOrEmpty(Id))
             {
                 me.BaseUrl = DefaultBaseUrl;
+                me.MinSendLogLevel = LogLevel.None;
                 ModuleSettingsAccessor<LogzSettings>.SaveSettings();
             }
         }
@@ -59,7 +75,7 @@ namespace Decisions.Monitoring.Logz.io.Data
         {
             var issues = new List<ValidationIssue>();
 
-            if (SendLogs && string.IsNullOrEmpty(LogToken))
+            if ((MinSendLogLevel != LogLevel.None) && string.IsNullOrEmpty(LogToken))
                 issues.Add(new ValidationIssue(this, "Log Token must be supplied", "", BreakLevel.Fatal,
                     nameof(LogToken)));
 
@@ -75,6 +91,10 @@ namespace Decisions.Monitoring.Logz.io.Data
             var all = new List<BaseActionType>();
             all.Add(new EditEntityAction(typeof(LogzSettings), "Edit", "Edit"));
             return all.ToArray();
+        }
+
+        static public LogzSettings Instance() { 
+            return ModuleSettingsAccessor<LogzSettings>.GetSettings();
         }
     }
 }

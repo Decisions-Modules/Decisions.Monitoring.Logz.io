@@ -9,11 +9,11 @@ namespace Decisions.Monitoring.Logz.io.Utility
         {
             get
             {
-                var settings = ModuleSettingsAccessor<LogzSettings>.GetSettings();
+                var settings = LogzSettings.Instance();
                 return new LogzCredential
                 {
                     BaseUrl = settings.BaseUrl,
-                    LogToken = settings.SendLogs ? settings.LogToken : "",
+                    LogToken = settings.LogToken ?? "",
                     MetricsToken = settings.SendMetrics ? settings.MetricsToken : ""
                 };
             }

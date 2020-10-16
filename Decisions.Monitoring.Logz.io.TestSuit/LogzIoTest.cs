@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Decisions.Monitoring.Logz.io.Data;
 using Decisions.Monitoring.Logz.io.Utility;
 using DecisionsFramework;
@@ -36,7 +37,8 @@ namespace Decisions.Monitoring.Logz.io.TestSuit
                     {SessionID = "sessionid", Activity = "activity"},
                 new LogData()
             };
-            var res = LogzApi.SendLog(credential, data);
+            LogzLogData[] logzData = data.Select(it => new LogzLogData(it, "PortalUrlName", "hostName")).ToArray();
+            var res = LogzApi.SendLog(credential, logzData);
             Assert.IsTrue(res);
         }
 
