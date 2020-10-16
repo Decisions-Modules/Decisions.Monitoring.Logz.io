@@ -5,7 +5,6 @@ namespace Decisions.Monitoring.Logz.io.Utility
 {
     internal static class CredentialHelper
     {
-        private const string metricsTokenValue = "put metrics token here";
         public static LogzCredential Credentials
         {
             get
@@ -14,8 +13,8 @@ namespace Decisions.Monitoring.Logz.io.Utility
                 return new LogzCredential
                 {
                     BaseUrl = settings.BaseUrl,
-                    LogToken = settings.SendLogs? settings.LogToken : "",
-                    MetricsToken = metricsTokenValue
+                    LogToken = settings.SendLogs ? settings.LogToken : "",
+                    MetricsToken = settings.SendMetrics ? settings.MetricsToken : ""
                 };
             }
         }
