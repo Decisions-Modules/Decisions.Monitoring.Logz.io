@@ -34,17 +34,6 @@ namespace Decisions.Monitoring.Logz.io.Data
         [PropertyClassificationAttribute("Log Token", 3)]
         public string LogToken { get; set; }
 
-        [ORMField]
-        [DataMember]
-        [PropertyClassificationAttribute("Send Metrics", 4)]
-        public bool SendMetrics { get; set; }
-
-        [ORMField]
-        [DataMember]
-        [PropertyHiddenByValue(nameof(SendMetrics), false, true)]
-        [PropertyClassificationAttribute("Metrics Token", 5)]
-        public string MetricsToken { get; set; }
-
         public void Initialize()
         {
             var me = ModuleSettingsAccessor<LogzSettings>.GetSettings();
@@ -62,10 +51,6 @@ namespace Decisions.Monitoring.Logz.io.Data
             if (SendLogs && string.IsNullOrEmpty(LogToken))
                 issues.Add(new ValidationIssue(this, "Log Token must be supplied", "", BreakLevel.Fatal,
                     nameof(LogToken)));
-
-            if (SendMetrics && string.IsNullOrEmpty(MetricsToken))
-                issues.Add(new ValidationIssue(this, "Metrics Token must be supplied", "", BreakLevel.Fatal,
-                    nameof(MetricsToken)));
 
             return issues.ToArray();
         }
